@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>csv</title>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+</head>
+<body>
+	<script >
+		var width = 1000,
+			height = 600,
+			padding = 50;
+		d3.csv("sample.csv", function(d) {
+			var map = d.map(function(i) {
+				return +i.id;
+			})
+			
+			var histogram = d3.layout.histogram()
+				.bins(100)
+				(map)
+
+			var y = d3.scale.linear()
+				.domain([0,d3.max(histogram.map(function(i){ return i.length;}))])
+				.range([0,height]);
+
+			var x = d3.scale.linear()
+				.domain([0,d3.max(map)])
+				.range([0,width])
+
+			var xAxis = d3.svg.axis()
+				.scale()
+				.orient("bottom");
+
+
+			var canvas = d3.select('body').append('svg')
+						.attr('width',width)
+						.attr('height',height + padding)
+						.append('g')
+						.attr("transform",'translate(20,0)');
+
+			var group = canvas.append('g')
+				.attr("transform",'translate(0,' + height + ")")
+				.call(xAxis);
+
+
+			var bars = canvas.selectAll('.bar')
+							.data(histogram)
+							.enter()
+							.append('g')
+
+			bars.append('rect')
+							.attr('x', function(data){return x(data.x);})
+							.attr('y', function(data) {return 600 - y(data.y)})
+							.attr('width', function(data){return x(data.dx);})
+							.attr('height', function(data){return y(data.y);})
+							.attr('fill', 'steelblue')
+			bars.append('text')
+				.attr("x", function(d) {return x(d.x);})
+				.attr('y', function(d) {return 600 - y(d.y);})
+				.attr('fill','#000')
+				.attr('dy',"-7px")
+				.attr('dx',function(d) {return x(d.dx)/2;})
+				.attr('text-anchor','middle')
+				.text(function(d) {return d.y;})
+
+			console.log(histogram);
+		})
+
+
+
+	    
+			
+
+	</script>
+
+
+
+</body>
+</html>
