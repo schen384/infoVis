@@ -8,6 +8,20 @@
 </head>
 <body>
 	<script >
+
+		// var array = null;
+		// d3.csv("sample.csv", function(d) {
+		//   return {
+		//     id: d.id,
+		//     message: d.message
+		//   };
+		// }, function(error, rows) {
+		// 	array = rows;
+		// });
+		
+		// setTimeout(function(){
+		// 	console.log(array.length);
+		// }, 3000);
 		var width = 1000,
 			height = 600,
 			padding = 50;
@@ -22,14 +36,14 @@
 
 			var y = d3.scale.linear()
 				.domain([0,d3.max(histogram.map(function(i){ return i.length;}))])
-				.range([0,height]);
+				.range([0,height - 100]);
 
 			var x = d3.scale.linear()
 				.domain([0,d3.max(map)])
 				.range([0,width])
 
 			var xAxis = d3.svg.axis()
-				.scale()
+				.scale(x)
 				.orient("bottom");
 
 
