@@ -31,7 +31,7 @@
 			})
 			
 			var histogram = d3.layout.histogram()
-				.bins(100)
+				.bins(20)
 				(map)
 
 			var y = d3.scale.linear()
@@ -40,11 +40,22 @@
 
 			var x = d3.scale.linear()
 				.domain([0,d3.max(map)])
-				.range([0,width])
+				.range([0,width-20]);
+			console.log(d3.max(map));
+
+			// var axisScale = d3.scale.linear()
+   //                       // .domain([0,d3.max(map)])
+   //                       .range([0,width]);
+			var axisScale = d3.scale.ordinal()
+			    .domain(d3.range(20))
+			    .rangeRoundBands([0, width]);
 
 			var xAxis = d3.svg.axis()
-				.scale(x)
-				.orient("bottom");
+				.scale(axisScale)
+				.orient("bottom")
+				.tickSize(5)
+				.tickPadding(6)
+				.tickFormat(function(d) { return Math.round(d*(4859/20)); });
 
 
 			var canvas = d3.select('body').append('svg')
@@ -54,7 +65,7 @@
 						.attr("transform",'translate(20,0)');
 
 			var group = canvas.append('g')
-				.attr("transform",'translate(0,' + height + ")")
+				.attr("transform",'translate(-20,' + height + ")")
 				.call(xAxis);
 
 
