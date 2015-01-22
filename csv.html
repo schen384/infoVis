@@ -3,6 +3,11 @@
 <head>
 
 	<title>csv</title>
+	<style>
+	    .bar rect:hover{
+        	fill: rgba(0,0,0,.8);
+      	}
+	</style>
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
 </head>
@@ -73,6 +78,7 @@
 							.data(histogram)
 							.enter()
 							.append('g')
+							.attr("class", "bar");
 
 			bars.append('rect')
 							.attr('x', function(data){return x(data.x);})
