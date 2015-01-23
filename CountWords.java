@@ -18,7 +18,18 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.lang.String;
 import java.io.BufferedReader;
+import java.util.ArrayList;
 
+/*
+
+Counts tag words in tweet data. For infoVis project.
+
+Version 1.0
+
+@author Yamini Nambiar
+@date January 22, 2015
+
+ */
 
 
 public class CountWords {
@@ -36,7 +47,6 @@ public class CountWords {
                 totalCount++;
                 String[] curWords = line.split("\\s+");
                 for(String curWord: curWords) {
-                    //System.out.println(curWord);
                     if (wordCounts.get(curWord) == null) {
                         // new word
                         wordCounts.put(curWord, 1);
@@ -44,30 +54,11 @@ public class CountWords {
                         // existing word
                         int curWordCount = wordCounts.get(curWord);
                         wordCounts.put(curWord, ++curWordCount);
-                        //System.out.println("cur word count = " + curWordCount);
                     }
                 }
             }
         } catch (IOException e) {}
     }
-
-
-//        Scanner fileScanner = new Scanner(new File(fileName));
-//        while (fileScanner.hasNext()) {
-//            totalCount++;
-//            String curWord = fileScanner.next();
-//            //System.out.println(curWord + "   " + wordCounts.get(curWord));
-//            if (wordCounts.get(curWord) == null) {
-//                // new word
-//                wordCounts.put(curWord, 1);
-//            } else {
-//                // existing word
-//                int curWordCount = wordCounts.get(curWord);
-//                wordCounts.put(curWord, ++curWordCount);
-//                //System.out.println("cur word count = " + curWordCount);
-//            }
-//        }
-//    }
 
     public Set<String> getWords() {
         return wordCounts.keySet();
@@ -104,66 +95,52 @@ public class CountWords {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-//        CountWords wc = new CountWords(args[0]);
-//        Set<String> stopWords = new HashSet<>(Arrays.asList(
-//                "a", "an", "and", "are", "as", "be", "by", "is", "in", "of",
-//                "for", "from", "not", "to", "the", "that", "this", "with", "which"
-//        ));
-////        wc.wordCounts.entrySet().stream()
-////                .filter(entry -> !stopWords.contains(entry.getKey().toLowerCase()))
-////                .sorted((e1, e2) -> e1.getValue() - e2.getValue())
-////                .forEach(entry ->
-////                        System.out.printf("%s occurs %d times%n", entry.getKey(),
-////                                entry.getValue()));
-//
-//        try {
-//            PrintWriter writer = new PrintWriter("liberianGeneral.csv", "UTF-8");
-//            writer.println("\"name\",\"word\",\"count\"");
-//            wc.wordCounts.entrySet().stream()
-//                    .filter(entry -> (!stopWords.contains(entry.getKey().toLowerCase())))
-//                            .sorted((e1, e2) -> e1.getValue() - e2.getValue())
-//                            //.sorted(entry -> entry.getKey().replaceAll("\\d+", ""))
-//                            .forEach(entry ->
-//                            {
-//                                System.out.printf("%s occurs %d times%n", entry.getKey(), entry.getValue());
-//                                writer.printf("\"%s\",\"%s\",%d%n", entry.getKey(), entry.getKey(), entry.getValue());
-//                            });
-//            writer.close();
-//        } catch (IOException e) {
-//            System.out.println("IOException Unable to write to file");
-//        }
-
         CountWords wc = new CountWords(args[0]);
+        String writeToFile = new String(args[1]);
 
 
-        Set<String> tagWords = new HashSet<>(Arrays.asList(
-                "#Liberia", "Liberia", "election", "#elections", "vote", "2014", "excited", "peace", "#Liberia2011",
-                "politics", "voting", "polls", "Nobel", "liberia", "liberiaelection", "liberia2011"
+
+        Set<String> liberianTagWords = new HashSet<>(Arrays.asList(
+                "#Liberia", "Liberia", "election", "#elections", "vote", "2014", "excited", "peace",
+                "#Liberia2011", "politics", "voting", "polls", "Nobel", "liberia",
+                "liberiaelection", "liberia2011"
         ));
 
-        try {
-            PrintWriter writer = new PrintWriter("liberianGeneral.csv", "UTF-8");
-            writer.println("\"name\",\"word\",\"count\"");
-            wc.wordCounts.entrySet().stream()
-                    //.filter(entry -> entry.getValue() > 1) //tells you which words occur more than once
-                    .filter(entry -> (tagWords.contains(entry.getKey()))) //only includes tag words
-                    .sorted((e1, e2) -> e1.getValue() - e2.getValue())
-                    .forEach(entry ->
-                    {
-                        //System.out.printf("%s occurs %d times%n", entry.getKey(), entry.getValue());
-                        writer.printf("\"%s\",\"%s\",%d%n", entry.getKey(), entry.getKey(), entry.getValue());
-                    });
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("IOException Unable to write to file");
+        Set<String> kenyanTagWords = new HashSet<>(Arrays.asList(
+                "#Kenya", "kenya", "Kenya", "#elections", "vote", "2014", "kenyaelection",
+                "kenyadecides", "#Kenya2013", "Ke2013", "kedecides", "polls"
+        ));
+
+        ArrayList<Set<String>> electionTagWords = new ArrayList<Set<String>>();
+        electionTagWords.add(liberianTagWords);
+        //electionTagWords.add(kenyanTagWords);
+
+        for (Set<String> tagWords: electionTagWords) {
+            try {
+                PrintWriter writer = new PrintWriter(writeToFile, "UTF-8");
+                writer.println("\"name\",\"word\",\"count\"");
+                wc.wordCounts.entrySet().stream()
+                        //.filter(entry -> entry.getValue() > 1) //tells you which words occur more than once
+                        .filter(entry -> (tagWords.contains(entry.getKey()))) //only includes tag words
+                        .sorted((e1, e2) -> e1.getValue() - e2.getValue())
+                        .forEach(entry ->
+                        {
+                            //System.out.printf("%s occurs %d times%n", entry.getKey(), entry.getValue());
+                            writer.printf("\"%s\",\"%s\",%d%n", entry.getKey(), entry.getKey(), entry.getValue());
+                        });
+                writer.close();
+            } catch (IOException e) {
+                System.out.println("IOException Unable to write to file");
+            }
         }
 
 
 
-        for (String word: wc.getWordsRanked()) {
-             System.out.println("\"" + word + "\"" + " occurs " + wc.getCount(word)
-                                + " times in " + args[0]);
-        }
+
+//        for (String word: wc.getWordsRanked()) {
+//             System.out.println("\"" + word + "\"" + " occurs " + wc.getCount(word)
+//                                + " times in " + args[0]);
+//        }
         System.out.println(args[0] + " contains " + wc.getTotalCount()
                             + "  words.");
         System.out.println(args[0] + " contains " + wc.getWords().size()
