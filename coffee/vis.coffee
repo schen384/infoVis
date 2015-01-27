@@ -409,8 +409,9 @@ texts = [
   #{key:"aesop",file:"top_aesop.csv",name:"Aesop's Fables"}
   #{key:"alice",file:"alice.csv",name:"Alice's Adventures in Wonderland"}
   #{key:"gulliver",file:"top_gulliver.csv",name:"Gulliver's Travels"}
-  #{key:"tweets",file:"tweets.csv",name:"Liberian Election 2014"}
-  {key:"liberianGeneral",file:"liberianGeneral.csv",name:"Liberian General Election 2014"}
+  #{key:"tweets",file:"tweets.csv",name:"Liberian General Election 2014"}
+  {key:"liberianGeneral",file:"filtered_liberianGeneral.csv",name:"Liberian General Election 2014"}
+  #{key:"kenyanGeneral",file:"filtered_kenyanGeneral.csv",name:"Kenyan General Election 2013"}
 ]
 
 # ---

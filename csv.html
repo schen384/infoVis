@@ -13,9 +13,9 @@
 
 	<title>csv</title>
 	<style>
-	    .bar rect:hover{
-        	fill: rgba(0,0,0,.8);
-      	}
+		.bar rect:hover{
+		fill: rgba(0,0,0,.8);
+		}
 	</style>
 
 	<meta name="description" content="">
@@ -35,7 +35,7 @@
 <body>
 <div id="container" class="container">
 	<select id="text-select">
-		<!-- <option value="sherlock">Sherlock Holmes</option>
+		<!--<option value="sherlock">Sherlock Holmes</option>
 		<option value="aesop">Aesop's Fables</option>
 		<option value="alice">Alice in Wonderland</option>
 		<option value="gulliver">Gulliver's Travels</option>
@@ -92,7 +92,6 @@
 <![endif]-->
 
 <script >
-
 		// var array = null;
 		// d3.csv("sample.csv", function(d) {
 		//   return {
@@ -117,48 +116,38 @@
 			var histogram = d3.layout.histogram()
 				.bins(20)
 				(map)
-
 			var y = d3.scale.linear()
 				.domain([0,d3.max(histogram.map(function(i){ return i.length;}))])
 				.range([0,height - 100]);
-
 			var x = d3.scale.linear()
 				.domain([0,d3.max(map)])
 				.range([0,width-20]);
 			console.log(d3.max(map));
-
 			// var axisScale = d3.scale.linear()
    //                       // .domain([0,d3.max(map)])
    //                       .range([0,width]);
 			var axisScale = d3.scale.ordinal()
 			    .domain(d3.range(20))
 			    .rangeRoundBands([0, width]);
-
 			var xAxis = d3.svg.axis()
 				.scale(axisScale)
 				.orient("bottom")
 				.tickSize(5)
 				.tickPadding(6)
 				.tickFormat(function(d) { return Math.round(d*(4859/20)); });
-
-
 			var canvas = d3.select('body').append('svg')
 						.attr('width',width)
 						.attr('height',height + padding)
 						.append('g')
 						.attr("transform",'translate(20,0)');
-
 			var group = canvas.append('g')
 				.attr("transform",'translate(-20,' + height + ")")
 				.call(xAxis);
-
-
 			var bars = canvas.selectAll('.bar')
 							.data(histogram)
 							.enter()
 							.append('g')
 							.attr("class", "bar");
-
 			bars.append('rect')
 							.attr('x', function(data){return x(data.x);})
 							.attr('y', function(data) {return 600 - y(data.y)})
@@ -173,16 +162,14 @@
 				.attr('dx',function(d) {return x(d.dx)/2;})
 				.attr('text-anchor','middle')
 				.text(function(d) {return d.y;})
-
 			console.log(histogram);
 		})
 	    
 			
-
 	</script>
-	<footer>
-		<p><a href="https://github.com/vlandham/bubble_cloud">Source Code</a> | <a href="http://www.nytimes.com/interactive/2012/09/04/us/politics/democratic-convention-words.html">Original Inspiration</a></p>
-	</footer>
+<footer>
+	<p><a href="https://github.com/vlandham/bubble_cloud">Source Code</a> | <a href="http://www.nytimes.com/interactive/2012/09/04/us/politics/democratic-convention-words.html">Original Inspiration</a></p>
+</footer>
 
 
 </body>
